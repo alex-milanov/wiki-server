@@ -1,3 +1,4 @@
 {
-  "pathToWiki": "wiki"
+  "pathToWiki": "wiki",
+  "port": 8080
 }
