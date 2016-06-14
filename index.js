@@ -29,9 +29,10 @@ app.use(express.static('dist'));
 app.get('*', function (req, res) {
   const chain = req.url.slice(1).replace(/\%20/ig, ' ');
 
-  const homePath = path.resolve(config.pathToWiki, 'Home.md');
   const filePath = path.resolve(config.pathToWiki, chain.replace(/\_/ig, ' ')) + '.md';
   const filePathDash = path.resolve(config.pathToWiki, chain.replace(/\ /ig, '_')) + '.md';
+
+  console.log(filePath);
 
   if (fse.existsSync(filePathDash)) {
     res.send(
@@ -42,7 +43,7 @@ app.get('*', function (req, res) {
       pug.renderFile('src/index.pug', { content: parseFile(filePath) })
     );
   } else {
-    res.redirect('/Home');
+    res.redirect('/' + config.indexFile);
   }
 });
 

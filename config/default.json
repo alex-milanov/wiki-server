@@ -1,4 +1,5 @@
 {
   "pathToWiki": "wiki",
+  "indexFile": "index",
   "port": 8080
 }
