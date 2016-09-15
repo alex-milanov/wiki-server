@@ -32,9 +32,10 @@ const parseFile = parseFile => marked(
   )
 );
 
-const tplFile = path.resolve(__dirname, config.pathToSrc, 'index.pug');
+const tplFile = (config.srcPath || path.resolve(__dirname, 'src')) + 'index.pug';
+const distPath = config.distPath || path.resolve(__dirname, 'dist');
 
-app.use(express.static('dist'));
+app.use(express.static(distPath));
 
 app.get('*', function (req, res) {
   const chain = req.url.slice(1).replace(/\%20/ig, ' ');
