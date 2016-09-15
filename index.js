@@ -22,6 +22,8 @@ const config = Object.assign(
   util.parseArgs(process.argv.slice(2))
 );
 
+console.log('Starting wiki with config:', Object.keys(config).map(key => `\n  ${key}: ${config[key]}`).join(''));
+
 const preParse = str => str.replace(/\[\[([a-zA-Z0-9\_\ \-]+)\]\]/ig, '[$1](/$1)');
 
 const parseFile = parseFile => marked(
@@ -29,6 +31,8 @@ const parseFile = parseFile => marked(
     fse.readFileSync(parseFile, 'utf8')
   )
 );
+
+const tplFile = path.resolve(__dirname, config.pathToSrc, 'index.pug');
 
 app.use(express.static('dist'));
 
@@ -38,15 +42,13 @@ app.get('*', function (req, res) {
   const filePath = path.resolve(config.pathToWiki, chain.replace(/\_/ig, ' ')) + '.md';
   const filePathDash = path.resolve(config.pathToWiki, chain.replace(/\ /ig, '_')) + '.md';
 
-  console.log(filePath);
-
   if (fse.existsSync(filePathDash)) {
     res.send(
-      pug.renderFile('src/index.pug', { content: parseFile(filePathDash) })
+      pug.renderFile(tplFile, { content: parseFile(filePathDash) })
     );
   } else if (fse.existsSync(filePath)) {
     res.send(
-      pug.renderFile('src/index.pug', { content: parseFile(filePath) })
+      pug.renderFile(tplFile, { content: parseFile(filePath) })
     );
   } else {
     res.redirect('/' + config.indexFile);
@@ -54,5 +56,5 @@ app.get('*', function (req, res) {
 });
 
 app.listen(config.port, function () {
-  console.log(`Example app listening on port ${config.port}!`);
+  console.log(`Wiki started!`);
 });
