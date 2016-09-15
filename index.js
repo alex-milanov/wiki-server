@@ -14,7 +14,13 @@ marked.setOptions({
   tables: true,
 });
 
-const config = require('./config/default.json');
+const util = require('./util');
+
+const config = Object.assign(
+  {},
+  require('./config/default.json'),
+  util.parseArgs(process.argv.slice(2))
+);
 
 const preParse = str => str.replace(/\[\[([a-zA-Z0-9\_\ \-]+)\]\]/ig, '[$1](/$1)');
 
